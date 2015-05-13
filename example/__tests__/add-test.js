@@ -7,19 +7,13 @@ describe('addition', function() {
   });
 
   it('multiplies numbers', function() {
-    expect(add(2, 3)).toBe(6);
+    expect(add(1, 1)).toBe(2);
   });
 
   it('fails', function() {
-    throwsError();
+    expect(add(1, 1)).toBe(2);
   });
 
-});
-
-throwsError();
-
-describe('failure', function() {
-  throw new Error('oops');
 });
 
 function throwsError() {

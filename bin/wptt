@@ -21,6 +21,10 @@ var options = nomnom
     default: 3000,
     help: 'Port'
   })
+  .option('headless', {
+    flag: true,
+    help: 'Run in headless mode (requires PhantomJS to be installed)'
+  })
   .option('debug', {
     flag: true,
     help: 'Debug mode'

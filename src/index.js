@@ -6,8 +6,7 @@ import express from 'express';
 import Webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
-import Phantom from 'phantom';
-import formatStackTrace from './formatStackTrace';
+import PhantomRunner from './phantomjs';
 
 let find = Promise.promisify(glob);
 
@@ -23,11 +22,6 @@ function concat(arrays) {
     result = result.concat(arrays[i]);
   }
   return result;
-}
-
-
-function runPhantom() {
-  return new Promise(resolve => Phantom.create(phantom => resolve(phantom)));
 }
 
 function servePackage(app, packageName) {
@@ -62,6 +56,7 @@ export async function start(directory, options, config = {}, webpackConfig = {})
   let server = new WebpackDevServer(testCompiler, {
     contentBase: false,
     inline: true,
+    noInfo: true,
     stats: {
       assets: false,
       colors: false,
@@ -89,6 +84,7 @@ export async function start(directory, options, config = {}, webpackConfig = {})
   let middleware = WebpackDevMiddleware(frameworkCompiler, {
     contentBase: false,
     inline: true,
+    noInfo: true,
     stats: {
       assets: false,
       colors: false,
@@ -121,34 +117,15 @@ export async function start(directory, options, config = {}, webpackConfig = {})
     `);
   });
 
-  let phantom = runPhantom();
-
-  function phantomPass() {
-    serverStarted.then(() =>
-      phantom.then(phantom => new Promise(resolve => {
-        phantom.createPage(page => {
-          page.onConsoleMessage(msg => console.log(msg));
-          page.onError((err, frames) => {
-            page.evaluate(() => window.__wptt_sourceMap__, (sourceMap) => {
-              frames = frames.map(f => ({filename: f.file, line: f.line, column: 0}));
-              let stack = formatStackTrace(sourceMap, frames);
-              console.log(err + '\n' + stack);
-            });
-          });
-          page.open(`http://0.0.0.0:${options.port}`, status => page.close());
-          resolve();
-        })
-      })));
-  }
-
-  let serverStarted = new Promise(resolve => {
-    server.listen(options.port, function() {
-      resolve();
-    });
+  server.listen(options.port, function() {
+    let context = {
+      options,
+      testCompiler,
+      frameworkCompiler
+    };
+    if (options.headless) {
+      let phantom = new PhantomRunner(context);
+    }
   });
 
-  testCompiler.plugin('invalid', phantomPass);
-  frameworkCompiler.plugin('invalid', phantomPass);
-
-  phantomPass();
 }

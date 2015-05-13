@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/prometheusresearch/wptt",
   "dependencies": {
+    "autobind-decorator": "^1.2.0",
     "bluebird": "^2.9.25",
     "express": "^4.12.3",
     "glob": "^5.0.6",
