@@ -7,6 +7,7 @@ import Webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import Phantom from 'phantom';
+import formatStackTrace from './formatStackTrace';
 
 let find = Promise.promisify(glob);
 
@@ -61,7 +62,6 @@ export async function start(directory, options, config = {}, webpackConfig = {})
   let server = new WebpackDevServer(testCompiler, {
     contentBase: false,
     inline: true,
-    quiet: true,
     stats: {
       assets: false,
       colors: false,
@@ -89,7 +89,6 @@ export async function start(directory, options, config = {}, webpackConfig = {})
   let middleware = WebpackDevMiddleware(frameworkCompiler, {
     contentBase: false,
     inline: true,
-    quiet: true,
     stats: {
       assets: false,
       colors: false,
@@ -129,6 +128,13 @@ export async function start(directory, options, config = {}, webpackConfig = {})
       phantom.then(phantom => new Promise(resolve => {
         phantom.createPage(page => {
           page.onConsoleMessage(msg => console.log(msg));
+          page.onError((err, frames) => {
+            page.evaluate(() => window.__wptt_sourceMap__, (sourceMap) => {
+              frames = frames.map(f => ({filename: f.file, line: f.line, column: 0}));
+              let stack = formatStackTrace(sourceMap, frames);
+              console.log(err + '\n' + stack);
+            });
+          });
           page.open(`http://0.0.0.0:${options.port}`, status => page.close());
           resolve();
         })
