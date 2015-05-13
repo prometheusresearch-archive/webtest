@@ -11,6 +11,11 @@ describe('addition', function() {
   it('fails', function() {
     throwsError();
   });
+
+});
+
+describe('failure', function() {
+  throw new Error('oops');
 });
 
 function throwsError() {

@@ -1,31 +1,3 @@
-import nomnom from 'nomnom';
-import pkg from '../package.json';
-
-let options = nomnom
-  .option('config', {
-    abbr: 'c',
-    help: 'Webpack configuration'
-  })
-  .option('port', {
-    abbr: 'p',
-    default: 3000,
-    help: 'Port'
-  })
-  .option('debug', {
-    flag: true,
-    help: 'Debug mode'
-  })
-  .option('version', {
-    flag: true,
-    help: 'Print version and exit'
-  })
-  .parse();
-
-if (options.version) {
-  console.log(pkg.version);
-  process.exit(0);
-}
-
 import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
@@ -52,7 +24,17 @@ function concat(arrays) {
   return result;
 }
 
-async function start(directory, config = {}, webpackConfig = {}) {
+
+function runPhantom() {
+  return new Promise(resolve => Phantom.create(phantom => resolve(phantom)));
+}
+
+function servePackage(app, packageName) {
+  let packageDir = path.dirname(require.resolve(`${packageName}/package.json`));
+  app.use(`/${packageName}`, express.static(packageDir));
+}
+
+export async function start(directory, options, config = {}, webpackConfig = {}) {
   let entry = config.entry ?
     config.entry :
     directory + '/**/__tests__/*-test.js';
@@ -164,23 +146,3 @@ async function start(directory, config = {}, webpackConfig = {}) {
 
   phantomPass();
 }
-
-function runPhantom() {
-  return new Promise(resolve => Phantom.create(phantom => resolve(phantom)));
-}
-
-function servePackage(app, packageName) {
-  let packageDir = path.dirname(require.resolve(`${packageName}/package.json`));
-  app.use(`/${packageName}`, express.static(packageDir));
-}
-
-let directory = options._[0] || process.cwd();
-
-start(directory).then(
-  function() {
-
-  },
-  function(err) {
-    console.log('error', err);
-    throw err;
-  });

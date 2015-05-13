@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var wptt;
+try {
+  wptt = require('../lib');
+} catch(_err) {
+  require('babel/register')({stage: 0});
+  wptt = require('../src');
+}
+
+var nomnom = require('nomnom');
+var pkg = require('../package.json');
+
+var options = nomnom
+  .option('config', {
+    abbr: 'c',
+    help: 'Webpack configuration'
+  })
+  .option('port', {
+    abbr: 'p',
+    default: 3000,
+    help: 'Port'
+  })
+  .option('debug', {
+    flag: true,
+    help: 'Debug mode'
+  })
+  .option('version', {
+    flag: true,
+    help: 'Print version and exit'
+  })
+  .parse();
+
+if (options.version) {
+  console.log(pkg.version);
+  process.exit(0);
+}
+
+var directory = options._[0] || process.cwd();
+
+wptt.start(directory, options).then(
+  function() {
+
+  },
+  function(err) {
+    console.log('error', err);
+    throw err;
+  });
