@@ -29,10 +29,8 @@ function servePackage(app, packageName) {
   app.use(`/${packageName}`, express.static(packageDir));
 }
 
-export async function start(directory, options, config = {}, webpackConfig = {}) {
-  let entry = config.entry ?
-    config.entry :
-    directory + '/**/__tests__/*-test.js';
+export async function start(cwd, options, config = {}) {
+  let entry = cwd + '/' + options.discover;
   if (!Array.isArray(entry)) {
     entry = [entry];
   }
@@ -42,8 +40,8 @@ export async function start(directory, options, config = {}, webpackConfig = {})
     return;
   }
 
-  webpackConfig = {
-    ...webpackConfig,
+  config = {
+    ...config,
     entry,
     devtool: 'source-map',
     output: {
@@ -52,7 +50,7 @@ export async function start(directory, options, config = {}, webpackConfig = {})
     }
   };
 
-  let testCompiler = new Webpack(webpackConfig);
+  let testCompiler = new Webpack(config);
   let server = new WebpackDevServer(testCompiler, {
     contentBase: false,
     inline: true,
@@ -69,7 +67,7 @@ export async function start(directory, options, config = {}, webpackConfig = {})
   });
 
   let frameworkCompiler = new Webpack({
-    entry: require.resolve('./framework'),
+    entry: require.resolve('./jasmine'),
     devtool: 'source-map',
     output: {
       path: '/',

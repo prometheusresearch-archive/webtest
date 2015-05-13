@@ -1,17 +1,17 @@
 {
-  "name": "wptt",
+  "name": "wpbbt",
   "version": "1.0.0",
-  "description": "Webpack Testing Toolkit",
+  "description": "WebPack Based Browser Testing",
   "main": "lib/index.js",
   "bin": {
-    "wptt": "bin/wptt"
+    "wpbbt": "bin/wpbbt"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/prometheusresearch/wptt"
+    "url": "https://github.com/prometheusresearch/wpbbt"
   },
   "keywords": [
     "webpack",
@@ -21,9 +21,9 @@
   "author": "Prometheus Research, LLC",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/prometheusresearch/wptt/issues"
+    "url": "https://github.com/prometheusresearch/wpbbt/issues"
   },
-  "homepage": "https://github.com/prometheusresearch/wptt",
+  "homepage": "https://github.com/prometheusresearch/wpbbt",
   "dependencies": {
     "autobind-decorator": "^1.2.0",
     "bluebird": "^2.9.25",

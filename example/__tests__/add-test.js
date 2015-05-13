@@ -11,11 +11,7 @@ describe('addition', function() {
   });
 
   it('fails', function() {
-    expect(add(1, 1)).toBe(2);
+    throwsError();
   });
 
 });
-
-function throwsError() {
-  throw new Error('x');
-}

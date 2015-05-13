@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
-var wptt;
+var wpbbt;
 try {
-  wptt = require('../lib');
+  wpbbt = require('../lib');
 } catch(_err) {
   require('babel/register')({stage: 0});
-  wptt = require('../src');
+  wpbbt = require('../src');
 }
 
 var nomnom = require('nomnom');
 var pkg = require('../package.json');
+var fs = require('fs');
 
 var options = nomnom
   .option('config', {
@@ -24,6 +25,10 @@ var options = nomnom
   .option('headless', {
     flag: true,
     help: 'Run in headless mode (requires PhantomJS to be installed)'
+  })
+  .option('discover', {
+    default: '**/__tests__/*-test.js',
+    help: 'Glob patter to discover tests'
   })
   .option('debug', {
     flag: true,
@@ -40,13 +45,22 @@ if (options.version) {
   process.exit(0);
 }
 
-var directory = options._[0] || process.cwd();
+var cwd = process.cwd();
 
-wptt.start(directory, options).then(
+if (options._[0]) {
+  var stat = fs.statSync(options._[0]);
+  if (stat.isFile()) {
+    options.discover = options._[0];
+    cwd = process.cwd();
+  } else if (stat.isDirectory()) {
+    cwd = options._[0];
+  }
+}
+
+wpbbt.start(cwd, options).then(
   function() {
 
   },
   function(err) {
-    console.log('error', err);
     throw err;
   });

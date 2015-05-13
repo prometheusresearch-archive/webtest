@@ -1,9 +1,9 @@
 import ConsoleReporter from './ConsoleReporter';
-import formatStackTrace from './formatStackTrace';
+import formatStackTrace from '../formatStackTrace';
 
 const SOURCE_MAP = fetchSourceMap();
 
-window.__wptt_sourceMap__ = SOURCE_MAP;
+window.__wpbbt_sourceMap__ = SOURCE_MAP;
 
 function fetchSourceMap() {
   let request = new XMLHttpRequest();

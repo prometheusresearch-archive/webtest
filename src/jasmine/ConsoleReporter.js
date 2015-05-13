@@ -76,7 +76,9 @@ function ConsoleReporter(options) {
 
   this.specDone = function(result) {
     specs.push(result);
-    specCount++;
+    if (result.status !== 'disabled') {
+      specCount++;
+    }
     if (result.status == 'pending') {
       pendingCount++;
     } else if (result.status == 'passed') {
