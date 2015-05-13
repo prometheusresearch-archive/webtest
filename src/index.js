@@ -75,7 +75,7 @@ export async function start(cwd, options, config = {}) {
     },
     module: {
       loaders: [
-        {test: /\.js$/, loader: 'babel?stage=0'}
+        {test: /\.js$/, loader: require.resolve('babel-loader') + '?stage=0'}
       ]
     }
   });

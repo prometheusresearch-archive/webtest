@@ -72,7 +72,7 @@ if (fs.existsSync(path.join(cwd, 'webpack.config.js'))) {
 }
 
 if (config) {
-  config = require.resolve(config);
+  config = require(path.join(cwd, config));
 }
 
 wpbbt.start(cwd, options, config).then(
