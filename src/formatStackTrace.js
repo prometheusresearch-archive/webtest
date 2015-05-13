@@ -1,26 +1,50 @@
 import createStackMapper from 'stack-mapper';
 
 const STACK_RE = /at ([^ ]+) \((.+):([0-9]+):([0-9]+)\)/;
+const STACK_RE_NO_COLUMN = /at ([^ ]+) \((.+):([0-9]+)\)/;
 const STACK_RE_NO_NAME = /at (.+):([0-9]+):([0-9]+)/;
+const STACK_RE_NO_NAME_NO_COLUMN = /at (.+):([0-9]+)/;
 
 export function parseFrame(frame) {
   let m = STACK_RE.exec(frame)
   if (m) {
-    return {
+    frame = {
       name: m[1],
       filename: m[2],
       line: m[3],
-      column: m[4]
+      column: m[4] || 0
     };
+    return frame;
   }
   m = STACK_RE_NO_NAME.exec(frame)
   if (m) {
-    return {
+    frame = {
       name: null,
       filename: m[1],
       line: m[2],
       column: m[3]
     };
+    return frame;
+  }
+  m = STACK_RE_NO_NAME_NO_COLUMN.exec(frame)
+  if (m) {
+    frame = {
+      name: null,
+      filename: m[1],
+      line: m[2],
+      column: 0
+    };
+    return frame;
+  }
+  m = STACK_RE_NO_COLUMN.exec(frame)
+  if (m) {
+    frame = {
+      name: null,
+      filename: m[1],
+      line: m[2],
+      column: 0
+    };
+    return frame;
   }
   return null;
 }
