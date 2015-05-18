@@ -13,10 +13,21 @@ var pkg = require('../package.json');
 var fs = require('fs');
 var path = require('path');
 
-var options = nomnom
+var DEFAULT_GLOB = '**/__tests__/*-test.js';
+
+var args = nomnom
+  .script('webtest')
+  .option('entry', {
+    list: true,
+    position: 0,
+    help: 'Glob patterns to discover test cases  [$PWD/' + DEFAULT_GLOB + ']'
+  })
   .option('config', {
     abbr: 'c',
-    help: 'Webpack configuration'
+    help: 'Webpack configuration  [$PWD/webpack.config.js]'
+  })
+  .option('context', {
+    help: 'Context  [$PWD]'
   })
   .option('port', {
     abbr: 'p',
@@ -28,7 +39,7 @@ var options = nomnom
     help: 'Run in headless mode (requires PhantomJS to be installed)'
   })
   .option('discover', {
-    default: '**/__tests__/*-test.js',
+    default: DEFAULT_GLOB,
     help: 'Glob patter to discover tests'
   })
   .option('debug', {
@@ -41,41 +52,57 @@ var options = nomnom
   })
   .parse();
 
-if (options.version) {
+if (args.version) {
   console.log(pkg.version);
   process.exit(0);
 }
 
-var cwd = process.cwd();
+/**
+ * Context discovery.
+ */
 
-if (options._[0]) {
-  var stat = fs.statSync(options._[0]);
+var context = args.context || process.cwd();
+
+/**
+ * Entry points discovery
+ */
+
+var entry = args.entry.map(function(e) {
+  var stat = fs.statSync(e);
   if (stat.isFile()) {
-    options.discover = options._[0];
-    cwd = process.cwd();
+    return e;
   } else if (stat.isDirectory()) {
-    cwd = options._[0];
+    return e + '/' + args.discover
   }
+});
+
+if (entry.length === 0) {
+  entry = [context + '/' + args.discovery];
 }
+
+/**
+ * webpack.config.js discovery
+ */
 
 var config = null;
 
-if (options.config) {
-  if (options.config[0] !== '.' && options.config[0] !== '/') {
-    options.config = './' + options.config;
+if (args.config) {
+  if (args.config[0] !== '.' && args.config[0] !== '/') {
+    args.config = './' + args.config;
   }
-  config = options.config;
+  config = require(path.join(context, config));
+} else if (fs.existsSync(path.join(context, 'webpack.config.js'))) {
+  config = path.join(context, 'webpack.config.js');
+  config = require(config);
 }
 
-if (fs.existsSync(path.join(cwd, 'webpack.config.js'))) {
-  config = path.join(cwd, 'webpack.config.js');
-}
+var options = {
+  port: args.port,
+  headless: args.headless,
+  debug: args.debug
+};
 
-if (config) {
-  config = require(path.join(cwd, config));
-}
-
-webtest.start(cwd, options, config).then(
+webtest(context, entry, options, config).then(
   function() {
 
   },

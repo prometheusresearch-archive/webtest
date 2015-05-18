@@ -29,19 +29,18 @@ function servePackage(app, packageName) {
   app.use(`/${packageName}`, express.static(packageDir));
 }
 
-export async function start(cwd, options, config = {}) {
-  let entry = cwd + '/' + options.discover;
-  if (!Array.isArray(entry)) {
-    entry = [entry];
-  }
+export default async function webtest(context, entry, options, config = {}) {
+  entry = entry.map(e => `${context}/${e}`);
   entry = await concatMapPromise(find, entry);
 
   if (entry.length === 0) {
+    console.warn('no tests cases were found');
     return;
   }
 
   config = {
     ...config,
+    context,
     entry,
     devtool: 'source-map',
     output: {
