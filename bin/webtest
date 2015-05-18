@@ -22,6 +22,11 @@ var args = nomnom
     position: 0,
     help: 'Glob patterns to discover test cases  [$PWD/' + DEFAULT_GLOB + ']'
   })
+  .option('runtime', {
+    abbr: 'r',
+    default: 'phantomjs',
+    help: 'Runtime to execute tests in'
+  })
   .option('config', {
     abbr: 'c',
     help: 'Webpack configuration  [$PWD/webpack.config.js]'
@@ -34,9 +39,9 @@ var args = nomnom
     default: 3000,
     help: 'Port'
   })
-  .option('headless', {
+  .option('watch', {
     flag: true,
-    help: 'Run in headless mode (requires PhantomJS to be installed)'
+    help: 'Watch for changes and re-run tests'
   })
   .option('discover', {
     default: DEFAULT_GLOB,
@@ -98,14 +103,15 @@ if (args.config) {
 
 var options = {
   port: args.port,
-  headless: args.headless,
-  debug: args.debug
+  debug: !!args.debug,
+  watch: !!args.watch,
+  runtime: args.runtime
 };
 
 webtest(context, entry, options, config).then(
   function() {
-
+    process.exit(0);
   },
   function(err) {
-    throw err;
+    console.log(err.stack);
   });

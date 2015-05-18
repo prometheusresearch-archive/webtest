@@ -21,13 +21,14 @@ export default class PhantomRunner {
     let {options, testCompiler, frameworkCompiler} = context;
     this.context = context;
     this.href = `http://0.0.0.0:${options.port}`;
-    testCompiler.plugin('invalid', this.pass);
-    frameworkCompiler.plugin('invalid', this.pass);
-    this.pass();
+    if (options.watch) {
+      testCompiler.plugin('invalid', this.run);
+      frameworkCompiler.plugin('invalid', this.run);
+    }
   }
 
   @autobind
-  pass() {
+  run() {
     return runPhantom().then(phantom => new Promise(resolve => {
       log('start running tests');
       phantom.createPage(page => {

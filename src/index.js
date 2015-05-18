@@ -1,31 +1,20 @@
-import fs from 'fs';
+import fs   from 'fs';
 import path from 'path';
-import debug from 'debug';
-import glob from 'glob';
-import Promise from 'bluebird';
-import express from 'express';
-import Webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
+
+import debug                from 'debug';
+import glob                 from 'glob';
+import Promise              from 'bluebird';
+import express              from 'express';
+import Webpack              from 'webpack';
+import WebpackDevServer     from 'webpack-dev-server';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
-import PhantomRunner from './phantomjs';
+
+import {concatMapPromise} from './util';
+import PhantomRunner      from './phantomjs';
 
 let log = debug('webtest:index');
 
 let find = Promise.promisify(glob);
-
-async function concatMapPromise(func, array) {
-  let promises = array.map(item => func(item));
-  let resolutions = await Promise.all(promises);
-  return concat(resolutions);
-}
-
-function concat(arrays) {
-  var result = [];
-  for (var i = 0; i < arrays.length; i++) {
-    result = result.concat(arrays[i]);
-  }
-  return result;
-}
 
 function servePackage(app, packageName) {
   let packageDir = path.dirname(require.resolve(`${packageName}/package.json`));
@@ -136,16 +125,26 @@ export default async function webtest(context, entry, options, config = {}) {
     `);
   });
 
-  server.listen(options.port, function() {
-    log('server started on port: %s', options.port);
-    let context = {
-      options,
-      testCompiler,
-      frameworkCompiler
-    };
-    if (options.headless) {
-      let phantom = new PhantomRunner(context);
-    }
+  return new Promise((resolve, reject) => {
+    server.listen(options.port, function() {
+      log('server started on port: %s', options.port);
+      let context = {
+        options,
+        testCompiler,
+        frameworkCompiler
+      };
+      let runtime;
+      if (options.runtime === 'phantomjs') {
+        runtime = new PhantomRunner(context);
+      }
+      let run = runtime.run();
+      if (!options.watch) {
+        return run
+          .then(
+            resolve,
+            reject);
+      }
+    });
   });
 
 }
