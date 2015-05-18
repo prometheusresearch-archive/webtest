@@ -1,11 +1,11 @@
-# wpbbt
+# webtest
 
-wpbbt means webpack based browser testing.
+webtest is webpack based test runner.
 
 ## Installation
 
-    % npm install prometheusresearch/wpbbt
+    % npm install prometheusresearch/webtest
 
 ## Usage
 
-    % wpbbt --help
+    % webtest --help

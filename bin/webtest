@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-var wpbbt;
+var webtest;
 try {
-  wpbbt = require('../lib');
+  webtest = require('../lib');
 } catch(_err) {
   require('babel/register')({stage: 0});
-  wpbbt = require('../src');
+  webtest = require('../src');
 }
 
 var nomnom = require('nomnom');
@@ -75,7 +75,7 @@ if (config) {
   config = require(path.join(cwd, config));
 }
 
-wpbbt.start(cwd, options, config).then(
+webtest.start(cwd, options, config).then(
   function() {
 
   },

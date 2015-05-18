@@ -3,7 +3,7 @@ import formatStackTrace from '../formatStackTrace';
 
 const SOURCE_MAP = fetchSourceMap();
 
-window.__wpbbt_sourceMap__ = SOURCE_MAP;
+window.__webtest_sourceMap__ = SOURCE_MAP;
 
 function fetchSourceMap() {
   let request = new XMLHttpRequest();
