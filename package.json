@@ -27,6 +27,7 @@
   "dependencies": {
     "autobind-decorator": "^1.2.0",
     "bluebird": "^2.9.25",
+    "debug": "^2.2.0",
     "express": "^4.12.3",
     "glob": "^5.0.6",
     "jasmine": "^2.3.1",

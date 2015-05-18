@@ -1,7 +1,10 @@
+import debug from 'debug';
 import Promise from 'bluebird';
 import Phantom from 'phantom';
 import autobind from 'autobind-decorator';
 import formatStackTrace from './formatStackTrace';
+
+let log = debug('webtest:phantomjs');
 
 let _phantom;
 
@@ -26,6 +29,7 @@ export default class PhantomRunner {
   @autobind
   pass() {
     return runPhantom().then(phantom => new Promise(resolve => {
+      log('start running tests');
       phantom.createPage(page => {
         page.onConsoleMessage(msg => {
           console.log(msg)
@@ -38,6 +42,7 @@ export default class PhantomRunner {
           });
         });
         page.open(this.href, status => {
+          log('end running tests');
           page.close()
           resolve();
         });

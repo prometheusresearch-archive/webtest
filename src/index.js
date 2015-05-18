@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import debug from 'debug';
 import glob from 'glob';
 import Promise from 'bluebird';
 import express from 'express';
@@ -7,6 +8,8 @@ import Webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import PhantomRunner from './phantomjs';
+
+let log = debug('webtest:index');
 
 let find = Promise.promisify(glob);
 
@@ -29,7 +32,22 @@ function servePackage(app, packageName) {
   app.use(`/${packageName}`, express.static(packageDir));
 }
 
+function setupCompilerLogging(compiler, log) {
+  compiler.plugin('done', function() {
+    log('done');
+  });
+  compiler.plugin('compile', function() {
+    log('compile');
+  });
+  compiler.plugin('invalid', function() {
+    log('invalid');
+  });
+}
+
 export default async function webtest(context, entry, options, config = {}) {
+  log('context: %s', context);
+  log('entry points: %s', entry);
+
   entry = entry.map(e => `${context}/${e}`);
   entry = await concatMapPromise(find, entry);
 
@@ -50,6 +68,8 @@ export default async function webtest(context, entry, options, config = {}) {
   };
 
   let testCompiler = new Webpack(config);
+  setupCompilerLogging(testCompiler, debug('webtest:compiler:test'));
+
   let server = new WebpackDevServer(testCompiler, {
     contentBase: false,
     inline: true,
@@ -78,6 +98,8 @@ export default async function webtest(context, entry, options, config = {}) {
       ]
     }
   });
+  setupCompilerLogging(frameworkCompiler, debug('webtest:compiler:framework'));
+
   let middleware = WebpackDevMiddleware(frameworkCompiler, {
     contentBase: false,
     inline: true,
@@ -115,6 +137,7 @@ export default async function webtest(context, entry, options, config = {}) {
   });
 
   server.listen(options.port, function() {
+    log('server started on port: %s', options.port);
     let context = {
       options,
       testCompiler,
