@@ -109,9 +109,14 @@ var options = {
 };
 
 webtest(context, entry, options, config).then(
-  function() {
-    process.exit(0);
+  function(result) {
+    if (result.ok) {
+      process.exit(0);
+    } else {
+      process.exit(1);
+    }
   },
   function(err) {
     console.log(err.stack);
+    process.exit(1);
   });

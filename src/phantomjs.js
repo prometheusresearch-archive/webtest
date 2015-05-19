@@ -1,7 +1,9 @@
-import debug from 'debug';
-import Promise from 'bluebird';
-import Phantom from 'phantom';
-import autobind from 'autobind-decorator';
+import debug            from 'debug';
+import Promise          from 'bluebird';
+import Phantom          from 'phantom';
+import autobind         from 'autobind-decorator';
+import TapParser        from 'tap-parser';
+
 import formatStackTrace from './formatStackTrace';
 
 let log = debug('webtest:phantomjs');
@@ -31,9 +33,12 @@ export default class PhantomRunner {
   run() {
     return runPhantom().then(phantom => new Promise(resolve => {
       log('start running tests');
+      let result = null;
+      let parser = new TapParser(function(_result) { result = _result; });
       phantom.createPage(page => {
         page.onConsoleMessage(msg => {
           console.log(msg)
+          parser.write(msg + '\n', 'utf8');
         });
         page.onError((err, frames) => {
           page.evaluate(() => window.__Webtest__.fetchSourceMap(), (sourceMap) => {
@@ -44,8 +49,9 @@ export default class PhantomRunner {
         });
         page.open(this.href, status => {
           log('end running tests');
+          parser.end();
           page.close()
-          resolve();
+          resolve(result);
         });
       })
     }));

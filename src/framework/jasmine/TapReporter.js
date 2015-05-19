@@ -60,6 +60,8 @@ function TapReporter() {
         self.started = true;
         totalSpecsDefined = summary && summary.totalSpecsDefined || NaN;
         startTime = module.exports.startTime = new Date();
+        log('# starting');
+        log('TAP version 13');
     };
     self.suiteStarted = function(suite) {
         suite = getSuite(suite);
@@ -132,7 +134,7 @@ function TapReporter() {
         diagStr += ', ' + totalSpecsFailed + ' failure' + (totalSpecsFailed === 1 ? '' : 's');
         diagStr += ', ' + totalSpecsSkipped + ' skipped';
         diagStr += ', ' + disabledSpecs + ' disabled';
-        diagStr += ' in ' + dur + 's.';
+        //diagStr += ' in ' + dur + 's.';
         log(diagStr);
 
         self.finished = true;
