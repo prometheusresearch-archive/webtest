@@ -48,8 +48,9 @@ var args = nomnom
     help: 'Glob patter to discover tests'
   })
   .option('debug', {
+    hidden: true,
     flag: true,
-    help: 'Debug mode'
+    help: 'Webtest debug mode'
   })
   .option('version', {
     flag: true,

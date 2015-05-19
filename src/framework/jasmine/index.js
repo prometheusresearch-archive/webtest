@@ -1,29 +1,31 @@
+import debug                from 'debug';
+import fs                   from 'fs';
+import path                 from 'path';
+import express              from 'express';
 import Webpack              from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
+import setupCompilerLogging from '../../setupCompilerLogging';
+
+let log = debug('webtest:framework:jasmine');
 
 export default function configure(options) {
-  let compiler = new Webpack({
-    entry: require.resolve('./boot'),
-    devtool: 'source-map',
-    output: {
-      path: '/',
-      filename: 'bundle.js'
-    },
-    module: {
-      loaders: [
-        {
-          test: /\.css$/,
-          loader: 'style-loader!css-loader'
-        },
-        {
-          test: /\.js$/,
-          loader: require.resolve('babel-loader') + '?stage=0'
-        }
-      ]
-    },
-    node: {
-      global: true
-    }
+  let bundleFilename = path.join(__dirname, 'bundle.js');
+  if (!fs.existsSync(bundleFilename) || options.debug) {
+    return configureDebug(options);
+  } else {
+    log('using pre-built framework bundle');
+    return {serve: express.static(__dirname)};
+  }
+}
+
+function configureDebug(options) {
+  let bundleFilename = path.join(__dirname, 'bundle.js');
+  let compiler = new Webpack(require('./webpack.config.js'));
+  setupCompilerLogging(compiler, log);
+
+  compiler.plugin('done', function() {
+    fs.writeFile(bundleFilename, compiler.outputFileSystem.readFileSync('/bundle.js')); 
+    fs.writeFile(bundleFilename + '.map', compiler.outputFileSystem.readFileSync('/bundle.js.map')); 
   });
 
   let serve = WebpackDevMiddleware(compiler, {
