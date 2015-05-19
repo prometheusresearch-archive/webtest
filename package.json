@@ -27,14 +27,19 @@
   "dependencies": {
     "autobind-decorator": "^1.2.0",
     "bluebird": "^2.9.25",
+    "css-loader": "^0.12.1",
     "debug": "^2.2.0",
     "express": "^4.12.3",
     "glob": "^5.0.6",
+    "imports-loader": "^0.6.3",
     "jasmine": "^2.3.1",
     "jasmine-core": "^2.3.3",
+    "jasmine-reporters": "^2.0.6",
     "nomnom": "^1.8.1",
     "phantom": "^0.7.2",
-    "source-map": "^0.4.2"
+    "script-loader": "^0.6.1",
+    "source-map": "^0.4.2",
+    "style-loader": "^0.12.2"
   },
   "devDependencies": {
     "babel": "^5.2.17",
