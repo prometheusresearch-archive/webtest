@@ -22,9 +22,10 @@ export default function webtest(context, entry, options, config = {}) {
     log('context: %s', context);
     log('entry points: %s', entry);
 
-    entry = entry.map(e => `${context}/${e}`);
+    entry = entry.map(e => path.resolve(context, e));
     entry = await concatMapPromise(find, entry);
 
+    log('entry points: %s', entry);
     if (entry.length === 0) {
       console.warn('no tests cases were found');
       return;

@@ -70,23 +70,6 @@ if (args.version) {
 var context = args.context || process.cwd();
 
 /**
- * Entry points discovery
- */
-
-var entry = args.entry.map(function(e) {
-  var stat = fs.statSync(e);
-  if (stat.isFile()) {
-    return e;
-  } else if (stat.isDirectory()) {
-    return e + '/' + args.discover
-  }
-});
-
-if (entry.length === 0) {
-  entry = [context + '/' + args.discovery];
-}
-
-/**
  * webpack.config.js discovery
  */
 
@@ -101,6 +84,37 @@ if (args.config) {
   config = path.join(context, 'webpack.config.js');
   config = require(config);
 }
+
+/**
+ * Entry points discovery
+ */
+
+var entry = args.entry || [];
+
+if (entry.length === 0) {
+  if (config && config.webtest && config.webtest.entry) {
+    entry = config.webtest.entry;
+  } else {
+    entry = [context];
+  }
+}
+
+entry = entry.map(function(e) {
+  try {
+    var stat = fs.statSync(e);
+  } catch(err) {
+    if (err.code === 'ENOENT') {
+      return e;
+    }
+    throw err;
+  }
+  if (stat.isFile()) {
+    return e;
+  } else if (stat.isDirectory()) {
+    return e + '/' + args.discover
+  }
+});
+
 
 var options = {
   port: args.port,
