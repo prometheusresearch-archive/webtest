@@ -1,10 +1,10 @@
-# webtest
+# Webtest
 
-webtest is an opinionated webpack based test runner.
+Webtest is an opinionated Webpack based test runner.
 
 It has opinions on the following topics:
 
-* You use webpack
+* You use Webpack
 * You use Jasmine test framework (this opinion can be lifted easily, send a PR
   if you want to add support for mocha, ...)
 
@@ -14,14 +14,21 @@ It has opinions on the following topics:
 
 ## Usage
 
-Basic usage is to execute:
+Basic usage is as simple as:
 
     % webtest .
 
 which will try to find tests using `**/__tests__/*-test.js` glob pattern and
 execute them within the PhantomJS headless browser.
 
-## Custom test discovery
+To re-run tests on source code changes supply `--watch` parameter:
+
+    % webtest --watch .
+
+To run tests in regular browser jsut visit `http://localhost:3000` while this
+command is executing.
+
+### Custom test discovery
 
 You can specify desired test suites by listsing them as arguments:
 
@@ -34,16 +41,17 @@ Another way is to use a glob pattern:
 ### Webpack configuration
 
 Webtest looks for `webpack.config.js` file in the current directory and will use
-it for building test bundle if it is available. You can use `--config` parameter
-to specify alternative Webpack configuration for test bundle:
+it for building w test bundle if it is available. You can use `--config`
+parameter to specify alternative Webpack configuration:
 
     % webtest --config webpack.config.test.js ...
 
-You can also put Webtest entry configuration in `webtest.entry` key of Webpack configuration:
+You can put Webtest entry configuration in `webtest.entry` key of a Webpack
+configuration:
 
     module.exports = {
 
-      // ... other webpack configuration
+      // ... other Webpack configuration
 
       webtest: {
         entry: [
