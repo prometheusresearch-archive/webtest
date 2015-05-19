@@ -3,7 +3,7 @@ import jasmineRequire from 'jasmine-core/lib/jasmine-core/jasmine';
 import 'imports?jasmineRequire=jasmine-core/lib/jasmine-core/jasmine!jasmine-core/lib/jasmine-core/jasmine-html';
 
 import Webtest          from '../API';
-import ConsoleReporter  from './ConsoleReporter';
+import TapReporter      from './TapReporter';
 import formatStackTrace from '../../formatStackTrace';
 
 let __ExceptionFormatter = jasmineRequire.ExceptionFormatter();
@@ -53,16 +53,11 @@ let htmlReporter = new jasmine.HtmlReporter({
   timer: new jasmine.Timer()
 });
 
-let consoleReporter = new ConsoleReporter({
-  timer: new jasmine.Timer(),
-  print: function() {
-    console.log.apply(console, arguments)
-  }
-});
+let tapReporter = new TapReporter();
 
 env.addReporter(jasmineInterface.jsApiReporter);
 env.addReporter(htmlReporter);
-env.addReporter(consoleReporter);
+env.addReporter(tapReporter);
 
 let specFilter = new jasmine.HtmlSpecFilter({
   filterString: function() { return queryString.getParam("spec"); }
