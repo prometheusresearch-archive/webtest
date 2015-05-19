@@ -26,6 +26,7 @@
   "homepage": "https://github.com/prometheusresearch/webtest",
   "dependencies": {
     "autobind-decorator": "^1.2.0",
+    "babel-runtime": "^5.4.3",
     "bluebird": "^2.9.25",
     "css-loader": "^0.12.1",
     "debug": "^2.2.0",
@@ -37,8 +38,11 @@
     "phantom": "^0.7.2",
     "script-loader": "^0.6.1",
     "source-map": "^0.4.2",
+    "stack-mapper": "^0.2.2",
     "style-loader": "^0.12.2",
-    "tap-parser": "^1.1.3"
+    "tap-parser": "^1.1.3",
+    "webpack-dev-middleware": "^1.0.11",
+    "webpack-dev-server": "^1.8.2"
   },
   "devDependencies": {
     "babel": "^5.2.17",
