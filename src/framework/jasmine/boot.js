@@ -2,24 +2,9 @@ import 'jasmine-core/lib/jasmine-core/jasmine.css';
 import jasmineRequire from 'jasmine-core/lib/jasmine-core/jasmine';
 import 'imports?jasmineRequire=jasmine-core/lib/jasmine-core/jasmine!jasmine-core/lib/jasmine-core/jasmine-html';
 
-import ConsoleReporter from './ConsoleReporter';
-import formatStackTrace from '../formatStackTrace';
-
-const SOURCE_MAP = fetchSourceMap();
-
-window.__webtest_sourceMap__ = SOURCE_MAP;
-
-function fetchSourceMap() {
-  let request = new XMLHttpRequest();
-  request.open('GET', '/bundle.js.map', false);
-  request.send(null);
-
-  if (request.status === 200) {
-    return JSON.parse(request.responseText);
-  } else {
-    return null;
-  }
-}
+import Webtest          from '../API';
+import ConsoleReporter  from './ConsoleReporter';
+import formatStackTrace from '../../formatStackTrace';
 
 let __ExceptionFormatter = jasmineRequire.ExceptionFormatter();
 jasmineRequire.ExceptionFormatter = function() {
@@ -27,10 +12,11 @@ jasmineRequire.ExceptionFormatter = function() {
     let underlying = new __ExceptionFormatter();
     this.message = underlying.message;
     this.stack = function(err) {
-      if (!err || !err.stack || !SOURCE_MAP) {
+      let sourceMap = Webtest.fetchSourceMap();
+      if (!err || !err.stack || !sourceMap) {
         return underlying.stack(err);
       } else {
-        return formatStackTrace(SOURCE_MAP, err.stack);
+        return formatStackTrace(sourceMap, err.stack);
       }
     };
   };

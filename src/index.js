@@ -10,7 +10,7 @@ import WebpackDevServer     from 'webpack-dev-server';
 
 import {concatMapPromise}   from './util';
 import PhantomRunner        from './phantomjs';
-import configureFramework   from './jasmine';
+import configureFramework   from './framework/jasmine';
 
 let log = debug('webtest:index');
 

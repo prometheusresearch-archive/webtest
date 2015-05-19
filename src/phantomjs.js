@@ -36,7 +36,7 @@ export default class PhantomRunner {
           console.log(msg)
         });
         page.onError((err, frames) => {
-          page.evaluate(() => window.__webtest_sourceMap__, (sourceMap) => {
+          page.evaluate(() => window.__Webtest__.fetchSourceMap(), (sourceMap) => {
             frames = frames.map(f => ({filename: f.file, line: f.line, column: 0}));
             let stack = formatStackTrace(sourceMap, frames);
             console.log(err + '\n' + stack);
