@@ -19,14 +19,8 @@ function runPhantom() {
 
 export default class PhantomRunner {
 
-  constructor(context) {
-    let {options, testCompiler, framework} = context;
-    this.context = context;
+  constructor(options) {
     this.href = `http://0.0.0.0:${options.port}`;
-    if (options.watch) {
-      testCompiler.plugin('invalid', this.run);
-      framework.compiler.plugin('invalid', this.run);
-    }
   }
 
   @autobind

@@ -51,10 +51,10 @@ export default async function webtest(context, entry, options, config = {}) {
     }
   };
 
-  let testCompiler = new Webpack(config);
-  setupCompilerLogging(testCompiler, debug('webtest:compiler:test'));
+  let compiler = new Webpack(config);
+  setupCompilerLogging(compiler, debug('webtest:compiler:test'));
 
-  let server = new WebpackDevServer(testCompiler, {
+  let server = new WebpackDevServer(compiler, {
     contentBase: false,
     inline: true,
     noInfo: true,
@@ -91,14 +91,15 @@ export default async function webtest(context, entry, options, config = {}) {
   return new Promise((resolve, reject) => {
     server.listen(options.port, function() {
       log('server started on port: %s', options.port);
-      let context = {
-        options,
-        testCompiler,
-        framework
-      };
       let runtime;
       if (options.runtime === 'phantomjs') {
-        runtime = new PhantomRunner(context);
+        runtime = new PhantomRunner(options);
+        if (options.watch) {
+          compiler.plugin('invalid', runtime.run);
+          if (framework.compiler) {
+            framework.compiler.plugin('invalid', runtime.run);
+          }
+        }
       }
       let run = runtime.run();
       if (!options.watch) {
