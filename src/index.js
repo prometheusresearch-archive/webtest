@@ -17,6 +17,8 @@ let log = debug('webtest:index');
 
 let find = Promise.promisify(glob);
 
+const IGNORE_RE = /bower_components|node_modules/;
+
 export default function webtest(context, entry, options, config = {}) {
   return Promise.try(async function() {
     log('context: %s', context);
@@ -24,6 +26,7 @@ export default function webtest(context, entry, options, config = {}) {
 
     entry = entry.map(e => path.resolve(context, e));
     entry = await concatMapPromise(find, entry);
+    entry = entry.filter(e => !IGNORE_RE.exec(path.relative(context, e)));
 
     log('entry points: %s', entry);
     if (entry.length === 0) {
