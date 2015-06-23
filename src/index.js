@@ -12,7 +12,7 @@ import express              from 'express';
 import Webpack              from 'webpack';
 import WebpackDevServer     from 'webpack-dev-server';
 
-import {concatMapPromise}   from './util';
+import concatMapPromise     from './concatMapPromise';
 import PhantomRunner        from './phantomjs';
 import setupCompilerLogging from './setupCompilerLogging';
 import configureFramework   from './framework/jasmine';
