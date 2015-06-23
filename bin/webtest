@@ -40,6 +40,7 @@ var args = nomnom
     help: 'Port'
   })
   .option('watch', {
+    abbr: 'w',
     flag: true,
     help: 'Watch for changes and re-run tests'
   })
