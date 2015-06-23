@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 import debug            from 'debug';
 import Promise          from 'bluebird';
 import Phantom          from 'phantom';

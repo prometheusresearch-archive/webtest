@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 import fs   from 'fs';
 import path from 'path';
 

@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 let SOURCE_MAP = undefined;
 
 window.__webtest_sourceMap__ = SOURCE_MAP;

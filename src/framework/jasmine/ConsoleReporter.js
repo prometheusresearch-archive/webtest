@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 let noopTimer = {
   start: function(){},
   elapsed: function(){ return 0; }

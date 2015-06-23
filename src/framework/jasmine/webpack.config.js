@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 module.exports = {
   entry: require.resolve('./boot'),
   devtool: 'source-map',

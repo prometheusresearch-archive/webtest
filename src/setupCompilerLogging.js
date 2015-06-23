@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 export default function setupCompilerLogging(compiler, log) {
   compiler.plugin('done', function() {
     log('done');

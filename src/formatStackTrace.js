@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 import createStackMapper from 'stack-mapper';
 
 const STACK_RE = /at ([^ ]+) \((.+):([0-9]+):([0-9]+)\)/;

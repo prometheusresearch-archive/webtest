@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 import 'jasmine-core/lib/jasmine-core/jasmine.css';
 import jasmineRequire from 'jasmine-core/lib/jasmine-core/jasmine';
 import 'imports?jasmineRequire=jasmine-core/lib/jasmine-core/jasmine!jasmine-core/lib/jasmine-core/jasmine-html';

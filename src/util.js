@@ -1,3 +1,7 @@
+/**
+ * @copyright 2015 Prometheus Research LLC
+ */
+
 import Promise from 'bluebird';
 
 export async function concatMapPromise(func, array) {
