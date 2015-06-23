@@ -79,7 +79,7 @@ if (args.config) {
   if (args.config[0] !== '.' && args.config[0] !== '/') {
     args.config = './' + args.config;
   }
-  config = require(path.join(context, config));
+  config = require(path.join(context, args.config));
 } else if (fs.existsSync(path.join(context, 'webpack.config.js'))) {
   config = path.join(context, 'webpack.config.js');
   config = require(config);
