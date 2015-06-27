@@ -28,6 +28,10 @@ export default function webtest(context, entry, options, config = {}) {
     log('context: %s', context);
     log('entry points: %s', entry);
 
+    if (!Array.isArray(entry)) {
+      entry = [entry];
+    }
+
     entry = entry.map(e => path.resolve(context, e));
     entry = await concatMapPromise(find, entry);
     entry = entry.filter(e => !IGNORE_RE.exec(path.relative(context, e)));
