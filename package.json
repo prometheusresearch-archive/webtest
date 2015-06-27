@@ -1,6 +1,6 @@
 {
-  "name": "webtest",
-  "version": "1.0.0",
+  "name": "@prometheusresearch/webtest",
+  "version": "0.1.0",
   "description": "Webpack based test runnner",
   "main": "lib/index.js",
   "bin": {

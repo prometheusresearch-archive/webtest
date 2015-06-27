@@ -23,7 +23,7 @@ release-major: test lint
 
 publish:
 	git push --tags origin HEAD:master
-	npm publish
+	npm publish --access=public
 
 $(FRAMEWORK_BUNDLE):
 	@touch $@
