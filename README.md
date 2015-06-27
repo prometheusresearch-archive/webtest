@@ -10,7 +10,7 @@ It has opinions on the following topics:
 
 ## Installation
 
-    % npm install prometheusresearch/webtest
+    % npm install @prometheusresearch/webtest
 
 ## Usage
 
