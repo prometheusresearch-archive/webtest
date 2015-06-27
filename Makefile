@@ -4,7 +4,7 @@ SRC = $(shell find src -name '*.js') $(FRAMEWORK_BUNDLE)
 LIB = $(SRC:src/%=lib/%)
 
 BABEL_OPTS = \
-	--optional runtime  \
+	--optional runtime \
 	--stage 0
 
 build: $(LIB)
