@@ -21,7 +21,7 @@ release-minor: test lint
 release-major: test lint
 	@$(call release,major)
 
-publish:
+publish: build
 	git push --tags origin HEAD:master
 	npm publish --access=public
 
