@@ -39,7 +39,7 @@ export default function webtest(context, entry, options, config = {}) {
     log('entry points: %s', entry);
     if (entry.length === 0) {
       console.warn('no tests cases were found');
-      return;
+      return {ok: false};
     }
 
     config = {
