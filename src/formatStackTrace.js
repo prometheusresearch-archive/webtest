@@ -4,10 +4,10 @@
 
 import createStackMapper from 'stack-mapper';
 
-const STACK_RE = /at ([^ ]+) \((.+):([0-9]+):([0-9]+)\)/;
-const STACK_RE_NO_COLUMN = /at ([^ ]+) \((.+):([0-9]+)\)/;
-const STACK_RE_NO_NAME = /at (.+):([0-9]+):([0-9]+)/;
-const STACK_RE_NO_NAME_NO_COLUMN = /at (.+):([0-9]+)/;
+const STACK_RE                    = /at ([^ ]+) \((.+):([0-9]+):([0-9]+)\)/;
+const STACK_RE_NO_COLUMN          = /at ([^ ]+) \((.+):([0-9]+)\)/;
+const STACK_RE_NO_NAME            = /at (.+):([0-9]+):([0-9]+)/;
+const STACK_RE_NO_NAME_NO_COLUMN  = /at (.+):([0-9]+)/;
 
 export function parseFrame(frame) {
   let m = STACK_RE.exec(frame)
@@ -79,7 +79,13 @@ export default function formatStackTrace(sourceMap, frames) {
     frames = createStackMapper(sourceMap).map(frames);
   }
   frames = frames
-    .map(f => ({...f, filename: f.filename.replace(/^webpack:\/\/\//, '')}))
+    .map(f => {
+      if (f.filename) {
+        return {...f, filename: f.filename.replace(/^webpack:\/\/\//, '')};
+      } else {
+        return f;
+      }
+    })
     .filter(f => !/webpack\/bootstrap/.exec(f.filename))
     .map(formatFrame);
   return frames.join('\n');
